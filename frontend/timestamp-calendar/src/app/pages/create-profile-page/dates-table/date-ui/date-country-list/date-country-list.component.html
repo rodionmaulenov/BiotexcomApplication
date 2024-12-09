@@ -1,0 +1,13 @@
+<form>
+  <input type="text"
+         class="custom_country_input"
+         placeholder="Выберите страну"
+         [formControl]="control"
+         [matAutocomplete]="auto"
+         [ngClass]="{'disabled': control.disabled}">
+  <mat-autocomplete #auto="matAutocomplete">
+    @for (street of filteredStreets | async; track street) {
+      <mat-option [value]="street">{{ street }}</mat-option>
+    }
+  </mat-autocomplete>
+</form>

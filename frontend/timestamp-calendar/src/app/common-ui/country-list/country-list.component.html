@@ -1,0 +1,12 @@
+<form>
+  <input type="text"
+         class="tt_form_input"
+         placeholder="Выберите страну"
+         [formControl]="control"
+         [matAutocomplete]="auto">
+  <mat-autocomplete #auto="matAutocomplete">
+    @for (street of filteredStreets | async; track street) {
+      <mat-option [value]="street">{{ street }}</mat-option>
+    }
+  </mat-autocomplete>
+</form>

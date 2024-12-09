@@ -1,0 +1,21 @@
+backend/benv
+backend/media
+backend/static
+.idea
+.gitignore
+backend/docker-compose.dev.yml
+backend/Dockerfiledev
+.github
+../frontend/timestamp-calendar/node_modules
+
+# Python bytecode and cache directories
+__pycache__/
+*.pyo
+*.pyd
+.Python
+
+# Ignore all files in the migrations folder
+backend/duration/migrations/*
+
+# But keep the __init__.py file
+!backend/duration/migrations/__init__.py

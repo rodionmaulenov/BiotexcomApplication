@@ -1,0 +1,56 @@
+<div class="date-table">
+  <app-dates-change-table [dates]="relatedDates"
+                          (ChildFormStatus)="childFormStatusChange($event)"
+                          (childFormDataPush)="onChildFormDataChange($event)">
+  </app-dates-change-table>
+</div>
+
+<form class="tt_form profile-form" *ngIf="form" [formGroup]="form">
+
+  <div class="tt_form_label profile_label">
+    <span class="tt_form_label-text">ФИО</span>
+    <input type="text"
+           formControlName="full_name"
+           class="tt_form_input"
+           placeholder="Введите имя"/>
+  </div>
+
+  <div class="tt_form_label profile_label">
+    <span class="tt_form_label-text">Страна</span>
+    <app-country-list
+      [notInProgram]="true"
+      formControlName="country"></app-country-list>
+  </div>
+
+
+  <label class="tt_form_label profile_avatar">
+    <span class="tt_form_label-text">Аватар</span>
+    <app-avatar-upload (moveAvatarToParent)="parentFillAvatarField($event)"
+                       [avatarUrl]="fileUrl()">
+    </app-avatar-upload>
+  </label>
+
+  <div class="profile_country__btn">
+    <div class="profile_country__btn__inner">
+      <button mat-fab extended
+              type="submit"
+              (click)="returnBack()"
+              class="back-button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-left-fill icon"
+             viewBox="0 0 16 16">
+          <path
+            d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z"/>
+        </svg>
+        Назад
+      </button>
+      <button mat-fab extended
+              [disabled]="form.invalid || childFormInvalid"
+              type="submit"
+              (click)="onSubmit()">
+        Сохранить
+      </button>
+
+    </div>
+  </div>
+
+</form>

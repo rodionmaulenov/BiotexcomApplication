@@ -1,0 +1,85 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5431:5432"
+    env_file:
+      - .env
+
+  redis:
+    image: redis:6-alpine
+    ports:
+      - "6380:6379"
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfiledev
+    command: ./manage.py runserver 0.0.0.0:8000
+    depends_on:
+      - db
+      - redis
+    ports:
+      - "8000:8000"
+    volumes:
+      - migrations_data:/usr/src/app/migrations
+      - ./static:/usr/src/app/static
+      - ./media:/usr/src/app/media
+    env_file:
+      - .env
+    environment:
+      DJANGO_SERVICE: "web"
+      DJANGO_SETTINGS_MODULE: "main_app.settings"
+
+  frontend:
+    build:
+      context: ../frontend/timestamp-calendar
+      dockerfile: Dockerfile
+    ports:
+      - "4200:4200"
+    volumes:
+      - ../frontend/timestamp-calendar:/usr/src/app
+    command: npm start
+    depends_on:
+      - web
+
+
+  celery:
+    restart: on-failure
+    build:
+      context: .
+      dockerfile: Dockerfiledev
+    command: /usr/src/app/deploy_sh/wait-for-web.sh celery -A main_app worker --loglevel=info
+    volumes:
+      - ./static:/usr/src/app/static
+      - ./media:/usr/src/app/media
+    env_file:
+      - .env
+    environment:
+      DJANGO_SETTINGS_MODULE: "main_app.settings"
+
+  celery-beat:
+    restart: on-failure
+    build:
+      context: .
+      dockerfile: Dockerfiledev
+    command: /usr/src/app/deploy_sh/wait-for-web.sh celery -A main_app beat --loglevel=info
+    volumes:
+      - ./static:/usr/src/app/static
+      - ./media:/usr/src/app/media
+    env_file:
+      - .env
+    environment:
+      DJANGO_SETTINGS_MODULE: "main_app.settings"
+
+volumes:
+  postgres_data:
+  migrations_data:

@@ -1,0 +1,39 @@
+FROM python:3.10.12-alpine AS build
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1
+
+WORKDIR /usr/src/app
+
+COPY . .
+
+RUN apk --no-cache add --virtual .build-deps \
+    ca-certificates \
+    build-base \
+    postgresql-dev \
+    libpq-dev \
+    libffi-dev \
+    linux-headers \
+    musl-dev \
+    jpeg-dev \
+    zlib-dev \
+    && pip install --upgrade pip --root-user-action=ignore \
+    && pip install --no-cache-dir --root-user-action=ignore -v -r requirements.txt \
+    && find /usr/local \
+      \( -type d -a -name test -o -name tests \) \
+      -o \( -type f -a -name '*.pyc' -o -name '*.pyo' \) \
+      -exec rm -rf '{}' + \
+    && runDeps="$( \
+      scanelf --needed --nobanner --recursive /usr/local \
+      | awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
+      | sort -u \
+      | xargs -r apk info --installed \
+      | sort -u \
+    )" \
+    && apk add --virtual .rundeps $runDeps \
+    && apk del .build-deps \
+    && rm -rf /var/cache/apk/* \
+    && chmod +x ./deploy_sh/entrypoint.sh \
+    && chmod +x ./deploy_sh/wait-for-web.sh
+
+ENTRYPOINT ["/usr/src/app/deploy_sh/entrypoint.sh"]

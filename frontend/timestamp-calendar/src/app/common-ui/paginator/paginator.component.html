@@ -1,0 +1,8 @@
+<mat-paginator
+  [length]="pagination.count"
+  [pageSize]="pageSize"
+  [pageIndex]="pageIndex"
+  [pageSizeOptions]="[5, 10, 25, 50]"
+  (page)="onPageChange($event)">
+</mat-paginator>
+

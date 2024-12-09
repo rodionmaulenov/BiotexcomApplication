@@ -1,0 +1,75 @@
+<div *ngIf="profile" class="profile_card">
+  <!-- FIRST GRID COLUMN AVATAR-->
+  <div class="avatar-name">
+    <img [src]="profile.file"
+         alt="avatar"
+         class="profile_card__img">
+    <div class="profile_card__name">
+      <strong class="h6">{{ getNameAndSurname(profile.full_name) }}</strong>
+      <span
+        [class.green]="profile.disable"
+        [class.yellow]="!profile.disable"
+        class="sub_title">{{ profile.disable ? 'Включено' : 'Отключен' }}</span>
+    </div>
+  </div>
+
+  <!-- SECOND GRID COLUMN DEADLINES-->
+  <div class="profile_card__deadlines">
+    <ul class="days__list">
+      <li class="days__item">
+        <span>Дней прошло:</span>
+        <span>{{ profile.day_stayed }}</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- THiRD GRID COLUMN CALCULATION-->
+  <div class="profile_card_count__deadlines">
+    <ul class="days__list">
+      <li class="days__item">
+          <span>
+            <app-calendar
+              [placeholder]="'Молдова'"
+              (dateChange)="onMoldovaCalendarChange($event)"
+            ></app-calendar>
+          </span>
+      </li>
+      <li class="days__item">
+        <span>Дней осталось:</span>
+        <span>{{ mldDaysLeft ? mldDaysLeft : (mldDaysLeft === 0 ? mldDaysLeft : '_') }}</span>
+      </li>
+      <li class="days__item">
+        <span>Обновление:</span>
+        <span>{{ profile.day_update_mld }}</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- FORTH GRID COLUMN CALCULATION-->
+  <div class="profile_card_count__deadlines">
+    <ul class="days__list">
+      <li class="days__item">
+          <span>
+            <app-calendar
+              [placeholder]="'Украина'"
+              (dateChange)="onUkraineCalendarChange($event)"
+            ></app-calendar>
+          </span>
+      </li>
+      <li class="days__item">
+        <span>Дней осталось:</span>
+        <span>{{ ukrDaysLeft ? ukrDaysLeft : (ukrDaysLeft === 0 ? ukrDaysLeft : '_') }}</span>
+      </li>
+      <li class="days__item">
+        <span>Обновление:</span>
+        <span>{{ profile.day_update_ukr }}</span>
+      </li>
+    </ul>
+  </div>
+
+
+  <!-- FOURTH GRID COLUMN BUTTON-->
+  <div class="profile_card__action-btn">
+    <button class="btn" (click)="onSubmit(profile.id)">Профиль</button>
+  </div>
+</div>

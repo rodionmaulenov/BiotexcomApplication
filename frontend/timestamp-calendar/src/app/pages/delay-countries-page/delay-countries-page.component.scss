@@ -1,0 +1,26 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.container.animated {
+  opacity: 1;
+}
+
+.inner__wrapper {
+  display: grid;
+  grid-template-columns: 1fr 600px;
+}
+
+.hide {
+  display: none;
+}
+
+.profile_card__wrapper {
+  display: grid;
+  grid-gap: 8px;
+  margin-top: 25px;
+}
+

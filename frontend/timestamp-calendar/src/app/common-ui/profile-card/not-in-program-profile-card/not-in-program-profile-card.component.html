@@ -1,0 +1,17 @@
+<div *ngIf="profile" class="profile_card">
+  <!-- FIRST GRID COLUMN AVATAR-->
+  <div class="avatar-name">
+    <img [src]="profile.file"
+         alt="avatar"
+         class="profile_card__img">
+    <div class="profile_card__name">
+      <strong class="h6">{{ profile.full_name }}</strong>
+      <span class="sub_title">Отключен</span>
+    </div>
+  </div>
+
+  <!-- FOURTH GRID COLUMN BUTTON-->
+  <div class="profile_card__action-btn">
+    <button class="btn" (click)="onSubmit(profile.id)">Профиль</button>
+  </div>
+</div>

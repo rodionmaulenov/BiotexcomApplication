@@ -1,0 +1,90 @@
+:host {
+  margin-top: 20px;
+  margin-left: 10px;
+  display: grid;
+  grid-gap: 40px;
+  grid-template-columns: 1fr 600px;
+  padding: 0 24px 24px 24px;
+}
+
+.date-table {
+  grid-column: 1/2;
+}
+
+.profile-form {
+  min-height: 820px;
+  justify-self: center;
+  width: 600px;
+  grid-column: 2/3;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 20px;
+}
+
+.profile_label {
+  position: relative;
+  grid-column: 1/2;
+  width: 350px;
+  max-height: 115px;
+}
+
+.profile_avatar {
+  margin-top: 10px;
+  position: relative;
+  grid-column: 1/-1;
+}
+
+.profile_country__list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  background: var(--dark-color);
+  border: 1px solid var(--light-color);
+  border-top: none;
+  z-index: 10;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.profile_country__item {
+  padding: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 21px;
+  font-family: "JetBrains Mono", 'sans-serif';
+}
+
+.profile_country__item:hover {
+  background-color: black;
+}
+
+.profile_country__btn {
+  grid-column: 1/-1;
+  margin-top: 200px;
+  align-self: center;
+}
+
+.profile_country__btn__inner {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 10px;
+}
+
+.tt_form .mat-mdc-extended-fab {
+  width: 160px;
+}
+
+.back-button {
+  position: relative;
+}
+
+.back-button .icon {
+  position: absolute;
+  fill: var(--light-color);
+  left: -20px;
+}
+

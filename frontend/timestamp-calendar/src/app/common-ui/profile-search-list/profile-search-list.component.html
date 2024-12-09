@@ -1,0 +1,12 @@
+<form>
+  <input type="text"
+         placeholder="Выберите профиль"
+         [formControl]="control"
+         [matAutocomplete]="auto"
+         class="tt_form_input">
+  <mat-autocomplete #auto="matAutocomplete">
+    @for (profileName of profileNames; track profileName) {
+      <mat-option [value]="profileName">{{ profileName }}</mat-option>
+    }
+  </mat-autocomplete>
+</form>

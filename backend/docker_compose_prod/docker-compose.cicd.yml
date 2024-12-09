@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  web:
+    image: web-prod
+    build:
+      context: ..
+      dockerfile: Dockerfile
+
+  celery:
+    image: celery-prod
+    build:
+      context: ..
+      dockerfile: Dockerfile
+
+  celery-beat:
+    image: celery-beat-prod
+    build:
+      context: ..
+      dockerfile: Dockerfile
+
+  nginx:
+    image: nginx-prod
+    build:
+      context: ../nginx
+      dockerfile: ../nginx/Dockerfile

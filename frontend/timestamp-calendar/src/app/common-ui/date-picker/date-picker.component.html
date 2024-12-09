@@ -1,0 +1,10 @@
+<div class="date_input_entry">
+  <input matInput
+         [matDatepicker]="picker"
+         [placeholder]="placeholder"
+         class="date_input"
+         [formControl]="control"
+         [ngClass]="{'disabled': control.disabled}">
+  <mat-datepicker-toggle [for]="picker" matIconSuffix></mat-datepicker-toggle>
+  <mat-datepicker #picker></mat-datepicker>
+</div>

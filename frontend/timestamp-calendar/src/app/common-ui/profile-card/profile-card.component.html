@@ -1,0 +1,71 @@
+<div *ngIf="profile" class="profile_card">
+  <!-- FIRST GRID COLUMN AVATAR-->
+  <div class="avatar-name">
+    <img [src]="profile.file"
+         alt="avatar"
+         class="profile_card__img">
+    <div class="profile_card__name">
+      <strong class="h6">{{ getNameAndSurname(profile.full_name)  }}</strong>
+      <span
+        [class.green]="profile.disable"
+        [class.yellow]="!profile.disable"
+        class="sub_title">
+        {{ profile.disable ? 'Включено' : 'Отключен' }}
+      </span>
+    </div>
+  </div>
+
+  <!-- SECOND GRID COLUMN DEADLINES-->
+  <div class="profile_card__deadlines">
+    <ul class="days__list">
+      <li class="days__item">
+        <span>Дней прошло:</span>
+        <span>{{ profile.days_passed }}</span>
+      </li>
+      <li class="days__item">
+        <span>Дней осталось:</span>
+        <span
+          matBadge="!"
+          matBadgeOverlap="false"
+          [matBadgeHidden]="isBadgeHidden(profile.days_left)">{{ profile.days_left }}</span>
+      </li>
+      <li class="days__item">
+        <span>Обновление:</span>
+        <span>{{ profile.date_update }}</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- THiRD GRID COLUMN CALCULATION-->
+  <div class="profile_card_count__deadlines">
+    <ul class="days__list">
+      <li class="days__item">
+          <span>
+            <app-calendar
+              [placeholder]="country === 'ukraine' || country === 'UKR'? 'Молдова' : 'Украина'"
+              (dateChange)="onCalendarChange($event)"
+            ></app-calendar>
+          </span>
+      </li>
+      <li class="days__item">
+        <span>Дней осталось:</span>
+        <span>{{ daysLeft ? daysLeft : (daysLeft === 0 ? daysLeft : '_') }}</span>
+      </li>
+      <li class="days__item">
+        <span>Обновление:</span>
+        <span>{{ profile.date_update_in_ukr_or_mld }}</span>
+      </li>
+    </ul>
+  </div>
+
+
+  <!-- FOURTH GRID COLUMN BUTTON-->
+  <div class="profile_card__action-btn">
+    <button class="btn" (click)="onSubmit(profile.id)">Профиль</button>
+  </div>
+</div>
+
+
+
+
+
