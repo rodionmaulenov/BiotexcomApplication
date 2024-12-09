@@ -1,0 +1,46 @@
+<div class="table">
+  <div class="table-container">
+    <div class="table-header">
+      <span class="date_table_header">Въезд</span>
+      <span class="date_table_header">Выезд</span>
+      <span class="date_table_header">Страна</span>
+      <span class="date_table_header">Отслеживать</span>
+      <span class="date_table_header">Удалить</span>
+    </div>
+
+    <form *ngFor="let row of formArray.controls; let i = index; trackBy: dts.trackByIndex"
+          [formGroup]="dts.asFormGroup(row)">
+      <div *ngIf="i === 0 && !formArray.at(0).get('deleted')?.value" class="row-divider-top"></div>
+      <div class="table_body" @fadeOut *ngIf="!row.get('deleted')?.value">
+
+        <app-date-picker formControlName="entry" placeholder="Выберите дату">></app-date-picker>
+
+        <app-date-picker formControlName="exit" placeholder="Выберите дату">></app-date-picker>
+
+        <!-- Country Selection -->
+        <label class="date_country__label">
+          <app-date-country-list formControlName="country"></app-date-country-list>
+        </label>
+
+        <div class="date_disable">
+          <mat-slide-toggle formControlName="disable"></mat-slide-toggle>
+        </div>
+
+        <div class="checkbox_delete">
+          <mat-checkbox formControlName="deleted"
+                        class="checkbox"
+                        (change)="deleteRow(i, $event.checked)">
+          </mat-checkbox>
+        </div>
+      </div>
+      <div *ngIf="i < formArray.controls.length - 1 && !formArray.at(i + 1).get('deleted')?.value" class="row-divider">
+      </div>
+    </form>
+  </div>
+</div>
+<button class="date_button"
+        mat-fab extended
+        (click)="addRow()"
+        [disabled]="dts.isProfileNameEmpty || formArray.invalid">
+  Добавить
+</button>

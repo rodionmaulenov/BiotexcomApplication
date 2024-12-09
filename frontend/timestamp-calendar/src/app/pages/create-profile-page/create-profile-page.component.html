@@ -1,0 +1,51 @@
+<div class="date-table">
+  <app-dates-table></app-dates-table>
+</div>
+
+<form class="tt_form profile-form" [formGroup]="form">
+
+  <div class="tt_form_label profile_label">
+    <span class="tt_form_label-text">ФИО</span>
+    <input type="text"
+           formControlName="full_name"
+           class="tt_form_input"
+           placeholder="Введите имя"/>
+  </div>
+
+  <div class="tt_form_label profile_label">
+    <span class="tt_form_label-text">Страна</span>
+    <app-country-list formControlName="country"></app-country-list>
+  </div>
+
+
+  <div class="tt_form_label profile_label">
+    <span class="tt_form_label-text">Профили</span>
+    <app-profile-search-list formControlName="profileName"></app-profile-search-list>
+  </div>
+
+
+  <label class="tt_form_label profile_avatar">
+    <span class="tt_form_label-text">Аватар</span>
+    <app-avatar-upload (moveAvatarToParent)="parentFillAvatarField($event)"></app-avatar-upload>
+  </label>
+
+  <div class="profile_country__btn">
+    <div class="profile_country__btn__inner">
+      <button mat-fab extended
+              (click)="onSubmit()"
+              [disabled]="form.invalid || cps.isChildFormInvalid$.value"
+              type="submit">
+        Сохранить
+      </button>
+      <button class="custom_btn"
+              mat-fab extended
+              (click)="onSubmitAndProceed()"
+              [disabled]="form.invalid || cps.isChildFormInvalid$.value"
+              type="submit">
+        Создать новую запись
+      </button>
+
+    </div>
+  </div>
+
+</form>

@@ -1,0 +1,55 @@
+:host {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: 132px 1fr;
+  padding-bottom: 16px;
+  grid-gap: 32px;
+  border-bottom: 1px solid var(--light-color);
+}
+
+.avatar{
+  width: 132px;
+  height: 132px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.dropzone{
+  border-radius: 2px;
+  border: 1px dashed var(--light-color);
+  padding: 16px;
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.dropzone_label {
+  display: contents; /* Ensures the label doesn't interfere with styling */
+  cursor: pointer;
+}
+
+.dropzone_content{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bi{
+  width: 25px;
+  height: 25px;
+}
+
+.medium-text{
+  padding: 15px;
+  font-size: 11px;
+}
+
+.avatar-input{
+  display: none;
+}
+
+.avatar-error-message{
+  color: red;
+  font-size: 12px;
+}

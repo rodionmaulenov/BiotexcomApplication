@@ -1,0 +1,54 @@
+.table {
+  padding: 16px 20px 0 16px;
+  background: var(--dark-color);
+  border: 1px solid var(--light-color);
+
+  &.disabled {
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+.table-container {
+  width: 100%;
+}
+
+.table-header,
+.table_body {
+  display: grid;
+  grid-template-columns: 190px 190px 180px 1fr 1fr;
+  align-items: center;
+  column-gap: 50px;
+  margin-bottom: 20px;
+}
+
+.row-divider-top {
+  border-top: 1px solid var(--light-color); /* Adjust the color as needed */
+  margin: 10px 0; /* Adds spacing around the divider */
+  opacity: 0.2;
+}
+
+.row-divider {
+  border-bottom: 1px solid var(--light-color); /* Adjust the color as needed */
+  margin: 10px 0; /* Adds spacing around the divider */
+  opacity: 0.2;
+}
+
+.date_table_header {
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 16px;
+  font-family: "JetBrains Mono", 'sans-serif';
+  color: var(--light-transparent-color);
+}
+
+
+.date_button {
+  margin-top: 8px;
+}
+
+
+
+
+

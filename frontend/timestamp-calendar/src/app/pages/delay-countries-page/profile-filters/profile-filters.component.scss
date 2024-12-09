@@ -1,0 +1,27 @@
+.wrapper__inner {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.profile_search_input {
+  width: 100%;
+}
+
+
+.position{
+  position: relative;;
+}
+
+.search_form_svg {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  //transform: translateX(100%);
+  pointer-events: none;
+}
+
+.form_shadow{
+  box-shadow: 20px 20px 25px rgba(0, 0, 0, 0.4);
+}
+

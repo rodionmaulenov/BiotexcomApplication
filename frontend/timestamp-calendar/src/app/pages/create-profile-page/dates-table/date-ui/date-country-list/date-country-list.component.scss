@@ -1,0 +1,23 @@
+.custom_country_input {
+  max-width: 150px;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 400;
+  font-family: "JetBrains Mono", 'sans-serif';
+  background: var(--dark-color);
+  color: var(--light-color);
+  border: none;
+  border-bottom: 1px solid var(--light-color);
+  height: 25px;
+
+  &:focus-visible {
+    outline: 1px solid var(--primary-color);
+    border-radius: 4px;
+  }
+
+  &.disabled {
+    cursor: default;
+    pointer-events: none;
+    color: var(--disabled-color);
+  }
+}

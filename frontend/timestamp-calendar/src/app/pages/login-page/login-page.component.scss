@@ -1,0 +1,99 @@
+.login_wrap {
+  display: grid;
+  grid-template-columns: 300px;
+  height: 100dvh;
+  align-items: center;
+  margin: 0 5%;
+}
+
+.login-label {
+  font-weight: 800;
+  font-size: 13px;
+  line-height: 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+.login-input {
+  width: 100%;
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--light-color) !important;
+  border-radius: 4px;
+  padding: 12px 35px 12px 20px;
+  background: var(--dark-color) !important;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 21px;
+  font-family: "JetBrains Mono", 'sans-serif';
+  color: var(--light-color);
+}
+
+.login-input:-webkit-autofill {
+  background: var(--dark-color) !important; /* Maintain custom background */
+  color: var(--light-color) !important; /* Maintain custom text color */
+  border: 1px solid var(--light-color) !important;
+  font-weight: 400 !important; /* Ensure font weight matches */
+  font-size: 14px !important; /* Match font size */
+  line-height: 21px !important; /* Match line height */
+  font-family: "JetBrains Mono", 'sans-serif' !important; /* Match font family */
+  -webkit-text-fill-color: var(--light-color) !important; /* Override autofill text color */
+  transition: background-color 5000s ease-in-out 0s; /* Prevent autofill highlight */
+}
+
+.login-input:-webkit-autofill:focus {
+  background: var(--dark-color) !important;
+  color: var(--light-color) !important;
+  font-weight: 400 !important;
+  font-size: 14px !important;
+  line-height: 21px !important;
+  font-family: "JetBrains Mono", 'sans-serif' !important;
+}
+
+.login-input:-webkit-autofill:hover {
+  background: var(--dark-color) !important;
+  color: var(--light-color) !important;
+  font-weight: 400 !important;
+  font-size: 14px !important;
+  line-height: 21px !important;
+  font-family: "JetBrains Mono", 'sans-serif' !important;
+}
+
+button {
+  width: 100%;
+}
+
+.password-input {
+  position: relative;
+}
+
+.password-yey-btn {
+  width: 22px;
+  position: absolute;
+  top: 35%;
+  right: 20px;
+  transform: translatex(50%);
+  background: none;
+  border: none;
+  color: #FFFFFFBF;
+  cursor: pointer;
+}
+
+.btn_shadow {
+  position: relative;
+
+  &:before {
+    content: "";
+    position: absolute;
+    bottom: -4px;
+    right: -4px;
+    background: var(--grey-color);
+    width: 100%;
+    height: 100%;
+    border-radius: 4px;
+    z-index: -1;
+  }
+}
+
+

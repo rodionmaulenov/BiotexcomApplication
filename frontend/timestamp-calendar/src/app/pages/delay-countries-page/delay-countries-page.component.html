@@ -1,0 +1,57 @@
+<div class="container"
+     @fadeIn
+     [ngClass]="{ 'animated': isAnimated }"
+     (@fadeIn.start)="onAnimationStart()"
+     (@fadeIn.done)="onAnimationDone()">
+  <div class="inner__wrapper">
+    <div class="search">
+      <app-profile-filters [searchForm]="searchForm"></app-profile-filters>
+    </div>
+    <div [ngClass]="{'hide': paginatorIsNotVisible}" class="custom_paginator">
+      <app-paginator [pageIndex]="pageIndex"
+                     [pagination]="pagination"
+                     [pageSize]="pageSize"
+                     (pageChange)="onPageChange($event)">
+      </app-paginator>
+    </div>
+  </div>
+
+
+  <div class="profile_card__wrapper">
+    <div class="profile_card__wrapper">
+      <!-- Render Uzb Profiles -->
+      <ng-container *ngFor="let profile of uzbProfiles; trackBy: trackByProfileUzbId">
+        <app-uzb-profile-card
+          @fadeIn
+          [profile]="profile"
+          [ukrDaysLeft]="getDaysLeft(profile.id, 'UKR')"
+          [mldDaysLeft]="getDaysLeft(profile.id, 'MLD')"
+          (ukrDateChange)="onDateChange($event.date, profile.id, 'UKR')"
+          (mldDateChange)="onDateChange($event.date, profile.id, 'MLD')"
+          [country]="country">
+        </app-uzb-profile-card>
+      </ng-container>
+
+      <!-- Render Non-Uzb Profiles -->
+      <ng-container *ngFor="let profile of nonUzbProfiles; trackBy: trackByProfileId">
+        <app-profile-card
+          @fadeIn
+          [profile]="profile"
+          [daysLeft]="getDaysLeft(profile.id)"
+          (dateChange)="onDateChange($event.date, profile.id)"
+          [country]="country">
+        </app-profile-card>
+      </ng-container>
+
+      <!-- Render Non-Uzb Profiles -->
+      <ng-container *ngFor="let profile of notInProgramProfiles; trackBy: trackByNotInProgramProfileId">
+        <app-not-in-program-profile-card
+          @fadeIn
+          [profile]="profile"
+          [country]="country">
+        </app-not-in-program-profile-card>
+      </ng-container>
+    </div>
+  </div>
+</div>
+

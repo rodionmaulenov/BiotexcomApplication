@@ -1,0 +1,60 @@
+// MATERIAL DATEPICKER
+.mat-mdc-form-field-has-icon-suffix .mat-mdc-text-field-wrapper {
+  padding: 0 !important;
+  width: 70% !important;
+}
+
+.mat-mdc-form-field-subscript-wrapper, .mat-mdc-form-field-bottom-align::before {
+  height: 0 !important;
+}
+
+.mat-mdc-form-field-infix {
+  padding: 0 !important;
+  margin: 0 !important;
+  min-height: 24px !important;
+}
+
+.mat-mdc-form-field-flex {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  height: 24px !important;
+}
+
+.mat-mdc-text-field-wrapper .mat-mdc-form-field-infix .mat-mdc-floating-label {
+  top: 10px !important;
+  left: 0 !important;
+}
+
+.mdc-text-field--filled .mdc-floating-label--float-above {
+  display: none !important;
+}
+
+.mat-mdc-icon-button {
+  padding-right: 0 !important;
+  text-align: end !important;
+}
+
+.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background: transparent !important;
+}
+
+.mdc-text-field--filled .mdc-floating-label {
+  font-size: 15px !important;
+  font-weight: 450 !important;
+  color: var(--light-color) !important;
+  font-family: "JetBrains Mono", 'sans-serif' !important;
+}
+
+.mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-floating-label {
+  color: var(--light-color) !important;
+}
+
+.mat-mdc-form-field-input-control.mat-mdc-form-field-input-control {
+  font-size: 15px !important;
+  font-weight: 450 !important;
+  color: var(--light-color) !important;
+  font-family: "JetBrains Mono", 'sans-serif' !important;
+}
+
+

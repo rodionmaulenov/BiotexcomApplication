@@ -1,0 +1,83 @@
+.profile_card {
+  border: 1px solid var(--light-color);
+  padding: 20px 20px;
+  display: grid;
+  grid-template-columns: 250px 150px 240px 240px 1fr;
+  grid-gap: 25px;
+  background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8));
+}
+
+// Avatar+NAME
+.avatar-name {
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  grid-gap: 20px;
+}
+
+.profile_card__img {
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  overflow: hidden;
+}
+
+.profile_card__name {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+// DEADLINES
+.days__list {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  gap: 8px;
+}
+
+.days__item {
+  font-size: 14px;
+  line-height: 20px;
+  font-style: normal;
+  font-weight: 400;
+  font-family: 'JetBrains Mono SemiBold', 'sans-serif';
+  display: flex;
+  gap: 8px;
+}
+
+// UKRAINE/MOLDOVA
+.profile_card__country {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.country__list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.country__item {
+  display: flex;
+  gap: 10px;
+}
+
+.profile_card__action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn {
+  width: 175px;
+}
+
+.green {
+  color: #a3e8a3;
+}
+
+.yellow {
+  color: #ffff00;
+}
+
