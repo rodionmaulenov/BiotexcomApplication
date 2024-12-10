@@ -5,7 +5,7 @@ backend/static
 .gitignore
 backend/docker-compose.dev.yml
 backend/Dockerfiledev
-.github
+backend/.github
 ../frontend/timestamp-calendar/node_modules
 
 # Python bytecode and cache directories
@@ -19,3 +19,62 @@ backend/duration/migrations/*
 
 # But keep the __init__.py file
 !backend/duration/migrations/__init__.py
+
+backend/media
+backend/static
+.idea
+backend/benv
+
+# Python bytecode and cache directories
+__pycache__/
+*.pyo
+*.pyd
+.Python
+
+# Ignore all files in the migrations folder
+backend/duration/migrations/*
+
+# But keep the __init__.py file
+!/backend/duration/migrations/__init__.py
+
+# Ignore frontend build files
+/frontend/timestamp-calendar/dist
+/frontend/timestamp-calendar/tmp
+/frontend/timestamp-calendar/out-tsc
+/frontend/timestamp-calendar/bazel-out
+
+# Ignore Node dependencies
+/frontend/timestamp-calendar/node_modules
+/frontend/timestamp-calendar/npm-debug.log
+/frontend/timestamp-calendar/yarn-error.log
+
+# Ignore IDE and editor configurations
+/frontend/timestamp-calendar/.idea/
+/frontend/timestamp-calendar/.project
+/frontend/timestamp-calendar/.vscode
+/frontend/timestamp-calendar/.classpath
+/frontend/timestamp-calendar/.c9/
+/frontend/timestamp-calendar/*.launch
+/frontend/timestamp-calendar/.settings/
+/frontend/timestamp-calendar/*.sublime-workspace
+
+# Ignore VSCode files
+/frontend/timestamp-calendar/.vscode/*
+!/frontend/timestamp-calendar/.vscode/settings.json
+!/frontend/timestamp-calendar/.vscode/tasks.json
+!/frontend/timestamp-calendar/.vscode/launch.json
+!/frontend/timestamp-calendar/.vscode/extensions.json
+/frontend/timestamp-calendar/.history/*
+
+# Ignore Miscellaneous files
+/frontend/timestamp-calendar/.angular/cache
+/frontend/timestamp-calendar/.sass-cache/
+/frontend/timestamp-calendar/connect.lock
+/frontend/timestamp-calendar/coverage
+/frontend/timestamp-calendar/libpeerconnection.log
+/frontend/timestamp-calendar/testem.log
+/frontend/timestamp-calendar/typings
+
+# Ignore system files
+.DS_Store
+Thumbs.db

@@ -58,8 +58,7 @@ if DEBUG:
     CORS_ALLOW_ALL_ORIGINS = True
 else:
     CORS_ALLOWED_ORIGINS = [
-        "http://localhost:4200",  # for development if using React, Vue, etc.
-        "https://demo.docktor-di.com",  # your trusted frontend domain
+        "https://biotexcomapplication.docktor-di.com",  # your trusted frontend domain
     ]
 
 MIDDLEWARE = [
