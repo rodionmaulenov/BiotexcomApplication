@@ -23,7 +23,7 @@ jobs:
 
       - name: Building docker images
         run: |
-            cd docker_gen_ssl
+            cd backend/docker_gen_ssl
             docker-compose -f docker-compose.cicd.yml build --no-cache
 
       - name: Push images to registry
