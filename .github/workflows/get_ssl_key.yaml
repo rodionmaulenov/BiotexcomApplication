@@ -23,7 +23,7 @@ jobs:
 
       - name: Building docker images
         run: |
-            cd ./backend/docker_gen_ssl
+            cd ./backend/docker_compose_gen_ssl
             docker-compose -f docker-compose.cicd.yml build --no-cache
 
       - name: Push images to registry
@@ -59,7 +59,7 @@ jobs:
 
             exit 0
           EOF
-          scp ./backend/docker_gen_ssl/docker-compose.prod.yml \
+          scp ./backend/docker_compose_gen_ssl/docker-compose.prod.yml \
           ${{ secrets.USER_FOR_EC2 }}@${{ secrets.EC2_SERVER_IP }}:/home/${{ secrets.USER_FOR_EC2 }}/django_application
 
       #DO THIS ONLY ONCE
