@@ -2,6 +2,7 @@ backend/media
 backend/static
 .idea
 backend/benv
+backend/.env
 
 # Python bytecode and cache directories
 __pycache__/

@@ -88,8 +88,9 @@ jobs:
       - name: Install extensions for ssl
         run: |
           ssh ${{ secrets.USER_FOR_EC2 }}@${{ secrets.EC2_SERVER_IP }} /bin/bash << 'EOF'
-          cd /home/${{ secrets.USER_FOR_EC2 }}/backend/persistentdata/certbot/conf/
+          cd /home/${{ secrets.USER_FOR_EC2 }}/backend
           rm -rf docker-compose.prod.yml
+          cd /home/${{ secrets.USER_FOR_EC2 }}/backend/persistentdata/certbot/conf/
           wget https://raw.githubusercontent.com/certbot/certbot/master/certbot-nginx/certbot_nginx/_internal/tls_configs/options-ssl-nginx.conf
           wget https://raw.githubusercontent.com/certbot/certbot/master/certbot/certbot/ssl-dhparams.pem
           EOF

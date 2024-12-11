@@ -58,8 +58,7 @@ if DEBUG:
     CORS_ALLOW_ALL_ORIGINS = True
 else:
     CORS_ALLOWED_ORIGINS = [
-        "http://localhost:4200",  # for development if using React, Vue, etc.
-        "https://demo.docktor-di.com",  # your trusted frontend domain
+        os.environ.get('ALLOWED_HOSTS')
     ]
 
 MIDDLEWARE = [
@@ -95,35 +94,6 @@ WSGI_APPLICATION = 'main_app.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
-if DEBUG:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-                'NAME': 'db',
-                'USER': 'me',
-                'PASSWORD': 'password',
-                'HOST': 'localhost',
-                'PORT': '',
-            }}
-    #         'NAME': os.environ.get('POSTGRES_DB'),
-    #         'USER': os.environ.get('POSTGRES_USER'),
-    #         'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-    #         'HOST': os.environ.get('POSTGRES_HOST'),
-    #         'PORT': '5432',
-    #     }
-    # }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': os.environ.get('POSTGRES_DB'),
-            'USER': os.environ.get('POSTGRES_USER'),
-            'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-            'HOST': os.environ.get('POSTGRES_HOST'),
-            'PORT': '5432',
-        }
-    }
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -205,8 +175,18 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Europe/Kiev'
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
-
 if not DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.environ.get('POSTGRES_DB'),
+            'USER': os.environ.get('POSTGRES_USER'),
+            'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+            'HOST': os.environ.get('POSTGRES_HOST'),
+            'PORT': '5432',
+        }
+    }
+
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
@@ -231,6 +211,9 @@ if not DEBUG:
 
     # Static files (CSS, JavaScript, images)
     STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/static/'
+    STATICFILES_DIRS = [
+        BASE_DIR / "static/angular",
+    ]
 
     # Media files (User uploads)
     MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
@@ -261,3 +244,20 @@ else:
 
     MEDIA_URL = 'media/'
     MEDIA_ROOT = BASE_DIR / "media"
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'db',
+            'USER': 'me',
+            'PASSWORD': 'password',
+            'HOST': 'localhost',
+            'PORT': '',
+        }}
+    #         'NAME': os.environ.get('POSTGRES_DB'),
+    #         'USER': os.environ.get('POSTGRES_USER'),
+    #         'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+    #         'HOST': os.environ.get('POSTGRES_HOST'),
+    #         'PORT': '5432',
+    #     }
+    # }

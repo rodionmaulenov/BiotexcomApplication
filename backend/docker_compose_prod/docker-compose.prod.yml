@@ -18,15 +18,15 @@ services:
       - "6379:6379"
 
   web:
-    image: ghcr.io/rodionmaulenov/timestamp/web-prod:v1.0.0
-    command: gunicorn -w 3 scheduler.wsgi --bind 0.0.0.0:8000
+    image: ghcr.io/rodionmaulenov/django-application/web-prod:v1.0.0
+    command: gunicorn -w 3 main_app.wsgi --bind 0.0.0.0:8000
     ports:
       - "8000:8000"
     depends_on:
       - db
       - redis
     volumes:
-      - migrations_data:/usr/src/app/schedule/migrations
+      - migrations_data:/usr/src/app/duration/migrations
     env_file:
       - .env
     environment:
@@ -34,8 +34,8 @@ services:
 
   celery:
     restart: on-failure
-    image: ghcr.io/rodionmaulenov/timestamp/celery-prod:v1.0.0
-    command: /usr/src/app/deploy_sh/wait-for-web.sh celery -A scheduler worker --loglevel=info
+    image: ghcr.io/rodionmaulenov/django-application/celery-prod:v1.0.0
+    command: /usr/src/app/deploy_sh/wait-for-web.sh celery -A main_app worker --loglevel=info
     depends_on:
       - web
     env_file:
@@ -43,22 +43,21 @@ services:
 
   celery-beat:
     restart: on-failure
-    image: ghcr.io/rodionmaulenov/timestamp/celery-beat-prod:v1.0.0
-    command: /usr/src/app/deploy_sh/wait-for-web.sh celery -A scheduler beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    image: ghcr.io/rodionmaulenov/django-application/celery-beat-prod:v1.0.0
+    command: /usr/src/app/deploy_sh/wait-for-web.sh celery -A main_app beat --loglevel=info
     depends_on:
       - web
     env_file:
       - .env
 
   nginx:
-    image: ghcr.io/rodionmaulenov/timestamp/nginx-prod:v1.0.0
+    image: ghcr.io/rodionmaulenov/django-application/nginx-prod:v1.0.0
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     ports:
       - "80:80"
       - "443:443"
     depends_on:
       - web
-      - frontend
     volumes:
       - ./persistentdata/certbot/conf:/etc/letsencrypt
       - ./persistentdata/certbot/www:/var/www/certbot

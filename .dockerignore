@@ -1,6 +1,5 @@
 backend/benv
 backend/media
-backend/static
 .idea
 .gitignore
 backend/docker-compose.dev.yml

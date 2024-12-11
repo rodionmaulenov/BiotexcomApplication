@@ -1,4 +1,4 @@
-FROM python:3.10.12-alpine AS build
+FROM python:3.10.12-alpine
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1

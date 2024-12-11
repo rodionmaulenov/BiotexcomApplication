@@ -1,0 +1,113 @@
+name: Deployment to AWS EC2. Production stage
+
+on:
+  push:
+    branches:
+      - prod
+
+jobs:
+  build-dockers-images:
+    name: Push images to GIT Registry
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v4.0.0
+
+      - name: Install docker-compose
+        uses: ndeloof/install-compose-action@v0.0.1
+        with:
+          version: v2.1.0
+          legacy: true
+
+      - name: Build Angular application
+        run: |
+          cd ./frontend/timestamp-calendar
+          npm install
+          mkdir -p ../../backend/static/angular
+          npm run build
+
+      - name: Building docker images
+        run: |
+          cd ./backend/docker_compose_prod
+          docker-compose -f docker-compose.cicd.yml build --no-cache
+
+      - name: Push images to registry
+        run: |
+          echo ${{ secrets.GIT_REGISTRY_ACCESS_TOKEN }} | docker login ghcr.io -u rodionmaulenov --password-stdin
+          
+          docker tag nginx-prod ghcr.io/rodionmaulenov/django-application/nginx-prod:v1.0.0
+          docker tag web-prod ghcr.io/rodionmaulenov/django-application/web-prod:v1.0.0
+          docker tag celery-prod ghcr.io/rodionmaulenov/django-application/celery-prod:v1.0.0
+          docker tag celery-beat-prod ghcr.io/rodionmaulenov/django-application/celery-beat-prod:v1.0.0
+          
+          docker push ghcr.io/rodionmaulenov/django-application/nginx-prod:v1.0.0
+          docker push ghcr.io/rodionmaulenov/django-application/web-prod:v1.0.0
+          docker push ghcr.io/rodionmaulenov/django-application/celery-prod:v1.0.0
+          docker push ghcr.io/rodionmaulenov/django-application/celery-beat-prod:v1.0.0
+
+  deploy:
+    name: Deploy on AWS EC2
+    runs-on: ubuntu-latest
+    needs: build-dockers-images
+
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v4.0.0
+
+      - name: Make envfile
+        uses: skiddph/actions-env@v1.0.3
+        env:
+          ENV_DJANGO_SETTINGS_MODULE: ${{ secrets.DJANGO_SETTINGS_MODULE }}
+          ENV_DEBUG: ${{ secrets.DEBUG }}
+          ENV_SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          ENV_ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
+          ENV_POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          ENV_POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          ENV_POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          ENV_POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+          ENV_POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+          ENV_AWS_S3_ACCESS_KEY: ${{ secrets.AWS_S3_ACCESS_KEY }}
+          ENV_AWS_S3_SECRET_KEY: ${{ secrets.AWS_S3_SECRET_KEY }}
+          ENV_AWS_STORAGE_BUCKET_NAME: ${{ secrets.AWS_STORAGE_BUCKET_NAME }}
+          ENV_AWS_S3_REGION_NAME: ${{ secrets.AWS_S3_REGION_NAME }}
+
+      - name: Add ssh private key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.PRIVATE_SSH_KEY }}
+
+      - name: Add remote server to known_hosts
+        run: |
+          ssh-keyscan -H ${{ secrets.EC2_SERVER_IP }} >> ~/.ssh/known_hosts
+
+      - name: Move files on remote server
+        run: |
+          scp ./backend/docker_compose_prod/docker-compose.prod.yml .env \
+          ${{ secrets.USER_FOR_EC2 }}@${{ secrets.EC2_SERVER_IP }}:/home/${{ secrets.USER_FOR_EC2 }}/backend
+
+      - name: Pull Docker images
+        run: |
+          ssh ${{ secrets.USER_FOR_EC2 }}@${{ secrets.EC2_SERVER_IP }} /bin/bash << EOF
+            cd /home/${{ secrets.USER_FOR_EC2 }}/backend
+          
+            docker stop $(docker ps -aq)
+            docker rm -f $(docker ps -aq)
+            docker rmi $(docker images -q) --force
+            docker volume rm $(docker volume ls -q | grep -v -e 'timestamp_app_postgres_data' -e 'timestamp_app_migrations_data') --force
+
+            echo ${{ secrets.GIT_REGISTRY_ACCESS_TOKEN }} | docker login ghcr.io -u rodionmaulenov --password-stdin
+
+            docker pull ghcr.io/rodionmaulenov/django-application/nginx-prod:v1.0.0
+            docker pull ghcr.io/rodionmaulenov/django-application/web-prod:v1.0.0
+            docker pull ghcr.io/rodionmaulenov/django-application/celery-prod:v1.0.0
+            docker pull ghcr.io/rodionmaulenov/django-application/celery-beat-prod:v1.0.0
+          
+            docker compose -f docker-compose.prod.yml up -d
+          EOF
+
+      - name: Remove <none> Docker images
+        run: |
+          ssh ${{ secrets.USER_FOR_EC2 }}@${{ secrets.EC2_SERVER_IP }} /bin/bash << EOF
+            docker images -f "dangling=true" -q | xargs -r docker rmi -f
+          EOF
