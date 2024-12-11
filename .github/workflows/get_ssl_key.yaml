@@ -34,7 +34,7 @@ jobs:
 
 
   deploy:
-    name: Deploy on AWS EC2
+    name: Join to AWS EC2
     runs-on: ubuntu-latest
     needs: build-dockers-images
 
