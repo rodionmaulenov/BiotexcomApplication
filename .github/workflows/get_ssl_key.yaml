@@ -51,7 +51,7 @@ jobs:
         run: |
           ssh-keyscan -H ${{ secrets.EC2_SERVER_IP }} >> ~/.ssh/known_hosts
 
-      - name: Generate application directories and directories for SSL certificates
+      - name: Create application directories and directories for SSL certificates
         run: |
           ssh ${{ secrets.USER_FOR_EC2 }}@${{ secrets.EC2_SERVER_IP }} /bin/bash << 'EOF'
             mkdir -p /home/${{ secrets.USER_FOR_EC2 }}/backend/persistentdata/certbot/www/.well-known/acme-challenge/
