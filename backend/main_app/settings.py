@@ -58,7 +58,7 @@ if DEBUG:
     CORS_ALLOW_ALL_ORIGINS = True
 else:
     CORS_ALLOWED_ORIGINS = [
-        os.environ.get('ALLOWED_HOSTS')
+        f"https://{os.environ.get('ALLOWED_HOSTS')}"
     ]
 
 MIDDLEWARE = [
