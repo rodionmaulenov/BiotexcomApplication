@@ -106,6 +106,7 @@ jobs:
             docker compose -f docker-compose.prod.yml up -d
           EOF
 
+
       - name: Remove <none> Docker images
         run: |
           ssh ${{ secrets.USER_FOR_EC2 }}@${{ secrets.EC2_SERVER_IP }} /bin/bash << EOF
