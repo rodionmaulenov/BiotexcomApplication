@@ -78,7 +78,7 @@ jobs:
             --rm certbot certonly \
             --webroot -w /var/www/certbot \
             --email ${{ secrets.MY_EMAIL }} \
-            -d demo.docktor-di.com \
+            -d biotexcomapplication.docktor-di.com \
             --rsa-key-size 2048 \
             --agree-tos \
             --force-renewal \
