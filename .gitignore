@@ -4,6 +4,7 @@ backend/static
 backend/benv
 backend/.env
 
+
 # Python bytecode and cache directories
 __pycache__/
 *.pyo
