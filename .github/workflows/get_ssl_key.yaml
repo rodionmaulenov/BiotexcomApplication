@@ -60,13 +60,13 @@ jobs:
             exit 0
           EOF
           scp ./backend/docker_compose_gen_ssl/docker-compose.prod.yml \
-          ${{ secrets.USER_FOR_EC2 }}@${{ secrets.EC2_SERVER_IP }}:/home/${{ secrets.USER_FOR_EC2 }}/django_application
+          ${{ secrets.USER_FOR_EC2 }}@${{ secrets.EC2_SERVER_IP }}:/home/${{ secrets.USER_FOR_EC2 }}/backend
 
       #DO THIS ONLY ONCE
       - name: Pull Docker images and Get ssl key
         run: |
           ssh ${{ secrets.USER_FOR_EC2 }}@${{ secrets.EC2_SERVER_IP }} /bin/bash << 'EOF'
-            cd /home/${{ secrets.USER_FOR_EC2 }}/django_application
+            cd /home/${{ secrets.USER_FOR_EC2 }}/backend
 
             echo ${{ secrets.GIT_REGISTRY_ACCESS_TOKEN }} | docker login ghcr.io -u rodionmaulenov --password-stdin
 
