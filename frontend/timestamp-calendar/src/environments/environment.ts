@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiUrl: 'https://biotexcomapplication.docktor-di.com/api/',
+  apiUrl: 'https://0.0.0.0:8000/api/',
 };

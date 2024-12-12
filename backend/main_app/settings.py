@@ -58,7 +58,7 @@ if DEBUG:
     CORS_ALLOW_ALL_ORIGINS = True
 else:
     CORS_ALLOWED_ORIGINS = [
-        f"https://{os.environ.get('ALLOWED_HOSTS')}"
+        "https://biotexcomapplication.docktor-di.com",
     ]
 
 MIDDLEWARE = [
