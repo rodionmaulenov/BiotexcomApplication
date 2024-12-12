@@ -24,7 +24,7 @@ jobs:
         run: |
           cd ./frontend/timestamp-calendar
           npm install
-          mkdir -p ../../backend/static/angular
+          mkdir -p ../../backend/nginx/static/angular
           npm run build
 
       - name: Building docker images
