@@ -165,8 +165,11 @@ export class DatesChangeTableComponent implements OnInit, OnChanges, OnDestroy {
       } else {
         row.get('days_left')?.setValue('_')
       }
+
+      this.cdr.detectChanges()
     });
   }
+
 
   ngOnDestroy() {
     this.destroy$.next()
