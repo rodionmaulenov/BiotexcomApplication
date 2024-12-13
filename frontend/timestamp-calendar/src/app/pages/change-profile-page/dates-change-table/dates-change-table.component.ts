@@ -1,5 +1,6 @@
 import {
-  ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges
+  ChangeDetectionStrategy,
+  ChangeDetectorRef, Component, EventEmitter, Input, NgZone, OnChanges, OnDestroy, OnInit, Output, SimpleChanges
 } from '@angular/core';
 import {
   DateCountryListComponent
@@ -16,7 +17,7 @@ import {FetchDate} from '../data/represent_data/profile.represent';
 import {DateFormService} from './data/services/load-date-form.service';
 import {DateEmptyControlService} from './data/services/empty-dates-form.service';
 import {SubmitData} from './data/interfaces/submit-data.interface';
-import {Subject, takeUntil} from 'rxjs';
+import {debounceTime, Subject, takeUntil} from 'rxjs';
 
 
 @Component({
@@ -29,7 +30,8 @@ import {Subject, takeUntil} from 'rxjs';
   providers: [provideNativeDateAdapter()],
   templateUrl: './dates-change-table.component.html',
   styleUrl: './dates-change-table.component.scss',
-  animations: [fadeOut, staggeredFadeIn]
+  animations: [fadeOut, staggeredFadeIn],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DatesChangeTableComponent implements OnInit, OnChanges, OnDestroy {
   @Input() dates: FetchDate[] = []
@@ -45,7 +47,8 @@ export class DatesChangeTableComponent implements OnInit, OnChanges, OnDestroy {
 
   constructor(private dfs: DateFormService,
               private dcs: DateEmptyControlService,
-              private cdr: ChangeDetectorRef) {
+              private cdr: ChangeDetectorRef,
+              private zone: NgZone) {
   }
 
 
@@ -63,15 +66,20 @@ export class DatesChangeTableComponent implements OnInit, OnChanges, OnDestroy {
         this.ChildFormStatus.emit(this.formArray.invalid)
       });
 
-      this.cdr.detectChanges()
+      // this.cdr.detectChanges()
     }
 
   }
 
   addRow() {
     const newRow = this.dcs.toFormGroup()
-    newRow.get('exit')?.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => this.updateDaysLeft(newRow))
-    newRow.get('entry')?.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => this.updateDaysLeft(newRow))
+    newRow.get('exit')?.valueChanges
+      .pipe(takeUntil(this.destroy$), debounceTime(500))
+      .subscribe(() => this.updateDaysLeft(newRow))
+
+    newRow.get('entry')?.valueChanges
+      .pipe(takeUntil(this.destroy$), debounceTime(500))
+      .subscribe(() => this.updateDaysLeft(newRow))
 
     this.formArray.push(newRow)
 
@@ -85,7 +93,7 @@ export class DatesChangeTableComponent implements OnInit, OnChanges, OnDestroy {
         row.patchValue({deleted: true})
         row.disable()
         setTimeout(() => {
-          this.cdr.detectChanges()
+          // this.cdr.detectChanges()
         }, 600)
       }
       if (row.get('status')?.value === 'new') {
@@ -93,7 +101,7 @@ export class DatesChangeTableComponent implements OnInit, OnChanges, OnDestroy {
         row.disable()
         setTimeout(() => {
           this.formArray.removeAt(index)
-          this.cdr.detectChanges()
+          // this.cdr.detectChanges()
         }, 600)
       }
       this.ChildFormStatus.emit(this.formArray.invalid)
@@ -138,33 +146,27 @@ export class DatesChangeTableComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private updateDaysLeft(row: FormGroup): void {
-    const entry = row.get('entry')?.value
-    const exit = row.get('exit')?.value
+    this.zone.run(() => {
+      const entry = row.get('entry')?.value
+      const exit = row.get('exit')?.value
 
-    if (entry && exit) {
-      const entryDate = new Date(entry)
-      const exitDate = new Date(exit)
+      if (entry && exit) {
+        const entryDate = new Date(entry)
+        const exitDate = new Date(exit)
 
-      if (!isNaN(entryDate.getTime()) && !isNaN(exitDate.getTime())) {
-        // Calculate the difference in whole days
-        const differenceInDays =
-          (exitDate.getTime() - entryDate.getTime()) / (1000 * 3600 * 24)
+        if (!isNaN(entryDate.getTime()) && !isNaN(exitDate.getTime())) {
+          const differenceInDays = (exitDate.getTime() - entryDate.getTime()) / (1000 * 3600 * 24)
+          const accurateDifference = Math.round(differenceInDays) + 1
 
-        // Add 1 day to include both entry and exit dates if needed
-        const accurateDifference = Math.round(differenceInDays) + 1
-
-        // Update the days_left field
-        row.get('days_left')?.setValue(accurateDifference)
+          row.get('days_left')?.setValue(accurateDifference)
+        } else {
+          row.get('days_left')?.setValue('_')
+        }
       } else {
-        // Reset days_left if dates are invalid
         row.get('days_left')?.setValue('_')
       }
-    } else {
-      // Reset days_left if either date is missing
-      row.get('days_left')?.setValue('_')
-    }
+    });
   }
-
 
   ngOnDestroy() {
     this.destroy$.next()

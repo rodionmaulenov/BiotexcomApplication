@@ -211,9 +211,6 @@ if not DEBUG:
 
     # Static files (CSS, JavaScript, images)
     STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/static/'
-    STATICFILES_DIRS = [
-        BASE_DIR / "static/angular",
-    ]
 
     # Media files (User uploads)
     MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
