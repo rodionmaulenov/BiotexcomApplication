@@ -13,6 +13,7 @@ import {ProfileControlService} from './data/services/create-empty-form.service';
 import {SubmitDateForm} from './dates-table/data/interfaces/date-table.interface';
 import {CreateProfilePageService} from './data/services/create-page.service';
 import {Router} from '@angular/router';
+import {ProfileService} from '../../data/services/profile.service';
 
 
 @Component({
@@ -30,6 +31,7 @@ export class CreateProfilePageComponent implements OnInit, OnDestroy, AfterViewI
   @ViewChild(AvatarUploadComponent) avatarUploadComponent!: AvatarUploadComponent
   @ViewChild(DatesTableComponent) datesTableComponent!: DatesTableComponent
   router = inject(Router)
+  profileService = inject(ProfileService)
   form!: FormGroup
   destroy$ = new Subject<void>()
 
@@ -62,6 +64,7 @@ export class CreateProfilePageComponent implements OnInit, OnDestroy, AfterViewI
     this.datesTableComponent.emitFormArrayData()
     this.cps.onSubmit().pipe(takeUntil(this.destroy$)).subscribe({
       next: ({country}) => {
+        this.profileService.clearCache()
         this.resetForm()
         this.datesTableComponent.formArray.reset()
         this.cdr.detectChanges()

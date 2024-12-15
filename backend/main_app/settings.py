@@ -259,7 +259,7 @@ else:
             'USER': 'me',
             'PASSWORD': 'password',
             'HOST': 'localhost',
-            'PORT': '',
+            'PORT': '5432',
         }}
     #         'NAME': os.environ.get('POSTGRES_DB'),
     #         'USER': os.environ.get('POSTGRES_USER'),

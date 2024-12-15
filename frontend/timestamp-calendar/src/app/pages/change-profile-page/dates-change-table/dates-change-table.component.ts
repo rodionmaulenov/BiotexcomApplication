@@ -9,7 +9,7 @@ import {DatePickerComponent} from '../../../common-ui/date-picker/date-picker.co
 import {MatCheckbox} from '@angular/material/checkbox';
 import {MatButton, MatFabButton} from '@angular/material/button';
 import {MatSlideToggle} from '@angular/material/slide-toggle';
-import {NgForOf, NgIf} from '@angular/common';
+import {AsyncPipe, NgForOf, NgIf} from '@angular/common';
 import {AbstractControl, FormArray, FormGroup, ReactiveFormsModule} from '@angular/forms';
 import {provideNativeDateAdapter} from '@angular/material/core';
 import {fadeOut, staggeredFadeIn} from '../../../data/animations/delete-animations';
@@ -25,7 +25,7 @@ import {debounceTime, Subject, takeUntil} from 'rxjs';
   standalone: true,
   imports: [
     DateCountryListComponent, DatePickerComponent, MatCheckbox, MatFabButton, MatSlideToggle, NgForOf,
-    NgIf, ReactiveFormsModule, MatButton
+    NgIf, ReactiveFormsModule, MatButton, AsyncPipe
   ],
   providers: [provideNativeDateAdapter()],
   templateUrl: './dates-change-table.component.html',
@@ -47,7 +47,6 @@ export class DatesChangeTableComponent implements OnInit, OnChanges, OnDestroy {
 
   constructor(private dfs: DateFormService,
               private dcs: DateEmptyControlService,
-              private cdr: ChangeDetectorRef,
               private zone: NgZone) {
   }
 
@@ -57,6 +56,7 @@ export class DatesChangeTableComponent implements OnInit, OnChanges, OnDestroy {
     this.formArray = new FormArray<FormGroup>([])
   }
 
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['dates'] && changes['dates'].currentValue) {
       this.formArray = this.dfs.createDateFormArray(changes['dates'].currentValue)
@@ -65,21 +65,15 @@ export class DatesChangeTableComponent implements OnInit, OnChanges, OnDestroy {
       this.formArray.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
         this.ChildFormStatus.emit(this.formArray.invalid)
       });
-
-      // this.cdr.detectChanges()
     }
-
   }
 
   addRow() {
     const newRow = this.dcs.toFormGroup()
-    newRow.get('exit')?.valueChanges
-      .pipe(takeUntil(this.destroy$), debounceTime(500))
-      .subscribe(() => this.updateDaysLeft(newRow))
-
-    newRow.get('entry')?.valueChanges
-      .pipe(takeUntil(this.destroy$), debounceTime(500))
-      .subscribe(() => this.updateDaysLeft(newRow))
+    newRow.get('exit')?.valueChanges.pipe(takeUntil(this.destroy$))
+      .subscribe(() => this.updateDaysLeft(newRow));
+    newRow.get('entry')?.valueChanges.pipe(takeUntil(this.destroy$))
+      .subscribe(() => this.updateDaysLeft(newRow));
 
     this.formArray.push(newRow)
 
@@ -93,7 +87,6 @@ export class DatesChangeTableComponent implements OnInit, OnChanges, OnDestroy {
         row.patchValue({deleted: true})
         row.disable()
         setTimeout(() => {
-          // this.cdr.detectChanges()
         }, 600)
       }
       if (row.get('status')?.value === 'new') {
@@ -101,7 +94,6 @@ export class DatesChangeTableComponent implements OnInit, OnChanges, OnDestroy {
         row.disable()
         setTimeout(() => {
           this.formArray.removeAt(index)
-          // this.cdr.detectChanges()
         }, 600)
       }
       this.ChildFormStatus.emit(this.formArray.invalid)
@@ -122,7 +114,8 @@ export class DatesChangeTableComponent implements OnInit, OnChanges, OnDestroy {
     this.childFormDataPush.emit(formData || [])
   }
 
-  processFormData(): SubmitData[] {
+
+  private processFormData(): SubmitData[] {
     return this.formArray.controls.map((control: AbstractControl) => {
       const {country, exit, entry, ...usefulData} = control.value
 
@@ -165,8 +158,6 @@ export class DatesChangeTableComponent implements OnInit, OnChanges, OnDestroy {
       } else {
         row.get('days_left')?.setValue('_')
       }
-
-      this.cdr.detectChanges()
     });
   }
 
@@ -175,6 +166,5 @@ export class DatesChangeTableComponent implements OnInit, OnChanges, OnDestroy {
     this.destroy$.next()
     this.destroy$.complete()
   }
-
 
 }
