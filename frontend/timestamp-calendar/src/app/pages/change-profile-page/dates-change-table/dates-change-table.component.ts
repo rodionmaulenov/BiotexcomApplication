@@ -139,26 +139,24 @@ export class DatesChangeTableComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private updateDaysLeft(row: FormGroup): void {
-    this.zone.run(() => {
-      const entry = row.get('entry')?.value
-      const exit = row.get('exit')?.value
+    const entry = row.get('entry')?.value
+    const exit = row.get('exit')?.value
 
-      if (entry && exit) {
-        const entryDate = new Date(entry)
-        const exitDate = new Date(exit)
+    if (entry && exit) {
+      const entryDate = new Date(entry)
+      const exitDate = new Date(exit)
 
-        if (!isNaN(entryDate.getTime()) && !isNaN(exitDate.getTime())) {
-          const differenceInDays = (exitDate.getTime() - entryDate.getTime()) / (1000 * 3600 * 24)
-          const accurateDifference = Math.round(differenceInDays) + 1
+      if (!isNaN(entryDate.getTime()) && !isNaN(exitDate.getTime())) {
+        const differenceInDays = (exitDate.getTime() - entryDate.getTime()) / (1000 * 3600 * 24)
+        const accurateDifference = Math.round(differenceInDays) + 1
 
-          row.get('days_left')?.setValue(accurateDifference)
-        } else {
-          row.get('days_left')?.setValue('_')
-        }
+        row.get('days_left')?.setValue(accurateDifference)
       } else {
         row.get('days_left')?.setValue('_')
       }
-    });
+    } else {
+      row.get('days_left')?.setValue('_')
+    }
   }
 
 
