@@ -152,10 +152,11 @@ export class DatesChangeTableComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  private toUtcDate(date: string | Date): Date | undefined {
+  private toUtcDate(date: string | Date): Date | null {
+    if (!date) return null
     const parsedDate = new Date(date)
     if (isNaN(parsedDate.getTime())) {
-      return
+      return null
     } else {
       return new Date(Date.UTC(parsedDate.getFullYear(), parsedDate.getMonth(), parsedDate.getDate()))
     }
