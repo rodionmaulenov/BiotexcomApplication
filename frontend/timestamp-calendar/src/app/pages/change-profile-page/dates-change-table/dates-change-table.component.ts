@@ -17,7 +17,7 @@ import {FetchDate} from '../data/represent_data/profile.represent';
 import {DateFormService} from './data/services/load-date-form.service';
 import {DateEmptyControlService} from './data/services/empty-dates-form.service';
 import {SubmitData} from './data/interfaces/submit-data.interface';
-import {debounceTime, Subject, takeUntil} from 'rxjs';
+import {Subject, takeUntil} from 'rxjs';
 
 
 @Component({
@@ -47,7 +47,7 @@ export class DatesChangeTableComponent implements OnInit, OnChanges, OnDestroy {
 
   constructor(private dfs: DateFormService,
               private dcs: DateEmptyControlService,
-              private zone: NgZone) {
+              private cdr: ChangeDetectorRef) {
   }
 
 
@@ -157,6 +157,7 @@ export class DatesChangeTableComponent implements OnInit, OnChanges, OnDestroy {
     } else {
       row.get('days_left')?.setValue('_')
     }
+     this.cdr.markForCheck()
   }
 
 
