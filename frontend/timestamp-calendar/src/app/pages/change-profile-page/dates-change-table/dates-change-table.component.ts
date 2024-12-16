@@ -139,25 +139,22 @@ export class DatesChangeTableComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private updateDaysLeft(row: FormGroup): void {
-    const entry = row.get('entry')?.value
-    const exit = row.get('exit')?.value
+    const entry = this.toUtcDate(row.get('entry')?.value)
+    const exit = this.toUtcDate(row.get('exit')?.value)
 
     if (entry && exit) {
-      const entryDate = new Date(entry)
-      const exitDate = new Date(exit)
-
-      if (!isNaN(entryDate.getTime()) && !isNaN(exitDate.getTime())) {
-        const differenceInDays = (exitDate.getTime() - entryDate.getTime()) / (1000 * 3600 * 24)
-        const accurateDifference = Math.round(differenceInDays) + 1
-
-        row.get('days_left')?.setValue(accurateDifference)
-      } else {
-        row.get('days_left')?.setValue('_')
-      }
+      const differenceInDays = (exit.getTime() - entry.getTime()) / (1000 * 3600 * 24)
+      const accurateDifference = Math.round(differenceInDays) + 1
+      row.get('days_left')?.setValue(accurateDifference)
     } else {
       row.get('days_left')?.setValue('_')
     }
-     this.cdr.markForCheck()
+    this.cdr.markForCheck()
+  }
+
+  private toUtcDate(date: string | Date): Date | null {
+    const parsedDate = new Date(date)
+    return isNaN(parsedDate.getTime()) ? null : new Date(Date.UTC(parsedDate.getFullYear(), parsedDate.getMonth(), parsedDate.getDate()))
   }
 
 
