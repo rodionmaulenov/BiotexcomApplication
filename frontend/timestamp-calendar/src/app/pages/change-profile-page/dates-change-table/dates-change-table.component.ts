@@ -1,6 +1,5 @@
 import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef, Component, EventEmitter, Input, NgZone, OnChanges, OnDestroy, OnInit, Output, SimpleChanges
+  ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges
 } from '@angular/core';
 import {
   DateCountryListComponent
@@ -46,8 +45,7 @@ export class DatesChangeTableComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   constructor(private dfs: DateFormService,
-              private dcs: DateEmptyControlService,
-              private cdr: ChangeDetectorRef) {
+              private dcs: DateEmptyControlService) {
   }
 
 
@@ -63,14 +61,11 @@ export class DatesChangeTableComponent implements OnInit, OnChanges, OnDestroy {
 
       this.formArray.controls.forEach((row: AbstractControl) => {
         const formGroup = row as FormGroup
-        formGroup.get('entry')?.valueChanges.pipe(takeUntil(this.destroy$))
-          .subscribe(() => this.updateDaysLeft(formGroup))
-
-         formGroup.get('exit')?.valueChanges.pipe(takeUntil(this.destroy$))
-          .subscribe(() => this.updateDaysLeft(formGroup))
+        this.attachRowSubscriptions(formGroup)
       });
 
       this.ChildFormStatus.emit(this.formArray.invalid)
+
       this.formArray.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
         this.ChildFormStatus.emit(this.formArray.invalid)
       });
@@ -79,10 +74,7 @@ export class DatesChangeTableComponent implements OnInit, OnChanges, OnDestroy {
 
   addRow() {
     const newRow = this.dcs.toFormGroup()
-    newRow.get('exit')?.valueChanges.pipe(takeUntil(this.destroy$))
-      .subscribe(() => this.updateDaysLeft(newRow))
-    newRow.get('entry')?.valueChanges.pipe(takeUntil(this.destroy$))
-      .subscribe(() => this.updateDaysLeft(newRow))
+    this.attachRowSubscriptions(newRow)
 
     this.formArray.push(newRow)
 
@@ -110,11 +102,11 @@ export class DatesChangeTableComponent implements OnInit, OnChanges, OnDestroy {
   }
 
 
-  asFormGroup(row: AbstractControl): FormGroup {
+  protected asFormGroup(row: AbstractControl): FormGroup {
     return row as FormGroup
   }
 
-  trackByIndex(index: number): number {
+  protected trackByIndex(index: number): number {
     return index
   }
 
@@ -160,9 +152,23 @@ export class DatesChangeTableComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  private toUtcDate(date: string | Date): Date | null {
+  private toUtcDate(date: string | Date): Date | undefined {
     const parsedDate = new Date(date)
-    return isNaN(parsedDate.getTime()) ? null : new Date(Date.UTC(parsedDate.getFullYear(), parsedDate.getMonth(), parsedDate.getDate()))
+    if (isNaN(parsedDate.getTime())) {
+      return
+    } else {
+      return new Date(Date.UTC(parsedDate.getFullYear(), parsedDate.getMonth(), parsedDate.getDate()))
+    }
+  }
+
+  private attachRowSubscriptions(row: FormGroup): void {
+    row.get('exit')?.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.updateDaysLeft(row)
+    });
+
+    row.get('entry')?.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.updateDaysLeft(row)
+    });
   }
 
 
