@@ -71,9 +71,11 @@ export class DatesChangeTableComponent implements OnInit, OnChanges, OnDestroy {
   addRow() {
     const newRow = this.dcs.toFormGroup()
     newRow.get('exit')?.valueChanges.pipe(takeUntil(this.destroy$))
-      .subscribe(() => this.updateDaysLeft(newRow));
+      .subscribe(() => {this.updateDaysLeft(newRow)
+        console.log('Exit value changed');});
     newRow.get('entry')?.valueChanges.pipe(takeUntil(this.destroy$))
-      .subscribe(() => this.updateDaysLeft(newRow));
+      .subscribe(() => {this.updateDaysLeft(newRow)
+        console.log('Entry value changed');});
 
     this.formArray.push(newRow)
 
@@ -142,14 +144,16 @@ export class DatesChangeTableComponent implements OnInit, OnChanges, OnDestroy {
     const entry = this.toUtcDate(row.get('entry')?.value)
     const exit = this.toUtcDate(row.get('exit')?.value)
 
+    console.log('Updating days left:', { entry, exit });
+
     if (entry && exit) {
       const differenceInDays = (exit.getTime() - entry.getTime()) / (1000 * 3600 * 24)
       const accurateDifference = Math.round(differenceInDays) + 1
       row.get('days_left')?.setValue(accurateDifference)
+      this.cdr.markForCheck()
     } else {
       row.get('days_left')?.setValue('_')
     }
-    this.cdr.markForCheck()
   }
 
   private toUtcDate(date: string | Date): Date | null {
