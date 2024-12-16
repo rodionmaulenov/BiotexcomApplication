@@ -61,6 +61,15 @@ export class DatesChangeTableComponent implements OnInit, OnChanges, OnDestroy {
     if (changes['dates'] && changes['dates'].currentValue) {
       this.formArray = this.dfs.createDateFormArray(changes['dates'].currentValue)
 
+      this.formArray.controls.forEach((row: AbstractControl) => {
+        const formGroup = row as FormGroup
+        formGroup.get('entry')?.valueChanges.pipe(takeUntil(this.destroy$))
+          .subscribe(() => this.updateDaysLeft(formGroup))
+
+         formGroup.get('exit')?.valueChanges.pipe(takeUntil(this.destroy$))
+          .subscribe(() => this.updateDaysLeft(formGroup))
+      });
+
       this.ChildFormStatus.emit(this.formArray.invalid)
       this.formArray.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
         this.ChildFormStatus.emit(this.formArray.invalid)
@@ -71,11 +80,9 @@ export class DatesChangeTableComponent implements OnInit, OnChanges, OnDestroy {
   addRow() {
     const newRow = this.dcs.toFormGroup()
     newRow.get('exit')?.valueChanges.pipe(takeUntil(this.destroy$))
-      .subscribe(() => {this.updateDaysLeft(newRow)
-        console.log('Exit value changed');});
+      .subscribe(() => this.updateDaysLeft(newRow))
     newRow.get('entry')?.valueChanges.pipe(takeUntil(this.destroy$))
-      .subscribe(() => {this.updateDaysLeft(newRow)
-        console.log('Entry value changed');});
+      .subscribe(() => this.updateDaysLeft(newRow))
 
     this.formArray.push(newRow)
 
@@ -144,13 +151,10 @@ export class DatesChangeTableComponent implements OnInit, OnChanges, OnDestroy {
     const entry = this.toUtcDate(row.get('entry')?.value)
     const exit = this.toUtcDate(row.get('exit')?.value)
 
-    console.log('Updating days left:', { entry, exit });
-
     if (entry && exit) {
       const differenceInDays = (exit.getTime() - entry.getTime()) / (1000 * 3600 * 24)
       const accurateDifference = Math.round(differenceInDays) + 1
       row.get('days_left')?.setValue(accurateDifference)
-      this.cdr.markForCheck()
     } else {
       row.get('days_left')?.setValue('_')
     }
